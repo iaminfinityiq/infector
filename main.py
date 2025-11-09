@@ -97,11 +97,12 @@ async def add_rows(ctx):
     Skips members who are already in the table.
     """
     global conn
+    await ctx.send("debug")
     await ctx.send(str(conn))
     open_connection()
     
     cursor = conn.cursor()
-
+    
     cursor.execute("USE railway")
     cursor.execute("""CREATE TABLE IF NOT EXISTS days_until_covid19 (
     user_id VARCHAR(50) NOT NULL,
