@@ -6,6 +6,8 @@ import os # type: ignore
 import mysql.connector # type: ignore
 from sys import exit
 
+load_dotenv()
+token = os.getenv("DISCORD_TOKEN")
 DB_HOST = os.environ.get("MYSQLHOST")
 DB_PORT = os.environ.get("MYSQLPORT")
 DB_USER = os.environ.get("MYSQLUSER")
@@ -13,6 +15,7 @@ DB_PASSWORD = os.environ.get("MYSQLPASSWORD")
 DB_NAME = os.environ.get("MYSQLDATABASE")
 
 def open_connection():
+    global conn
     try:
         conn = mysql.connector.connect(
             host=DB_HOST,
@@ -24,9 +27,6 @@ def open_connection():
     except mysql.connector.Error as err:
         print(f"Error connecting to MySQL: {err}")
         exit(1)
-
-load_dotenv()
-token = os.getenv("DISCORD_TOKEN")
 
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 intents = discord.Intents.default()
@@ -88,6 +88,7 @@ async def infect(ctx, infected: discord.Member):
 
 @bot.command()
 async def add_rows(ctx):
+    global conn
     open_connection()
     cursor = conn.cursor()
 
@@ -107,4 +108,4 @@ async def add_rows(ctx):
 
     await ctx.send("Added all rows to the users")
 
-bot.run(token, log_handler=handler, log_level=logging.DEBUG)
+bot.run(token)
