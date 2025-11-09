@@ -24,8 +24,6 @@ def open_connection():
     except mysql.connector.Error as err:
         print(f"Error connecting to MySQL: {err}")
         exit(1)
-    finally:
-        conn.close()
 
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
