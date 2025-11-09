@@ -101,10 +101,15 @@ async def add_rows(ctx):
     cursor = conn.cursor()
 
     cursor.execute("USE railway")
+    cursor.execute("""CREATE TABLE IF NOT EXISTS days_until_covid19 (
+    user_id VARCHAR(50) NOT NULL,
+    days INT NOT NULL
+)""")
+
     sql = """
-    INSERT INTO DaysUntilCovid19 (UserID, DaysLeft)
+    INSERT INTO days_until_covid19 (user_id, days_left)
     VALUES (%s, %s)
-    ON DUPLICATE KEY UPDATE DaysLeft = DaysLeft
+    ON DUPLICATE KEY UPDATE days_left = days_left
     """  # This avoids duplicates
 
     try:
