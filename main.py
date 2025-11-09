@@ -112,7 +112,7 @@ async def add_rows(ctx):
         )
         """)
         await ctx.send("Table check/create success")
-    except mysql.connector.Error as err:
+    except Exception as err:
         await ctx.send(f"Table creation error: {err}")
         return
 
