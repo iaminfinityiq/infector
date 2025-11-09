@@ -102,11 +102,19 @@ async def add_rows(ctx):
     
     cursor = conn.cursor()
     
-    cursor.execute("USE railway")
-    cursor.execute("""CREATE TABLE IF NOT EXISTS days_until_covid19 (
-    user_id VARCHAR(50) NOT NULL,
-    days INT NOT NULL
-)""")
+    try:
+        cursor.execute("USE railway")
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS days_until_covid19 (
+            user_id VARCHAR(50) NOT NULL,
+            days_left INT NOT NULL,
+            PRIMARY KEY (user_id)
+        )
+        """)
+        await ctx.send("Table check/create success")
+    except mysql.connector.Error as err:
+        await ctx.send(f"Table creation error: {err}")
+        return
 
     sql = """
     INSERT INTO days_until_covid19 (user_id, days_left)
