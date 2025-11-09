@@ -4,7 +4,7 @@ import logging # type: ignore
 from dotenv import load_dotenv
 import os # type: ignore
 import mysql.connector # type: ignore
-import sys.exit
+from sys import exit
 
 DB_HOST = os.environ.get("MYSQLHOST")
 DB_PORT = os.environ.get("MYSQLPORT")
@@ -23,7 +23,7 @@ def open_connection():
         )
     except mysql.connector.Error as err:
         print(f"Error connecting to MySQL: {err}")
-        sys.exit(1)
+        exit(1)
     finally:
         conn.close()
 
@@ -107,4 +107,4 @@ async def add_rows(ctx):
     cursor.close()
     conn.close()
 
-bot.run(token)
+bot.run(token, log_handler=handler, log_level=logging.DEBUG)
