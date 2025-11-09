@@ -67,7 +67,7 @@ async def on_message(message):
 
 @bot.command()
 async def infect(ctx, infected: discord.Member):
-    admin = discord.utils.get(ctx.author.roles, name="adm")
+    admin = discord.utils.get(infected.roles, name="adm")
     if admin:
         await ctx.send(f"Cannot infect user {infected.mention} because {infected.mention} is an admin")
         return
