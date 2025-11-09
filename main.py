@@ -100,6 +100,13 @@ async def add_rows(ctx):
     
     cursor = conn.cursor()
 
+    cursor.execute("""CREATE TABLE daysuntilcovid19 (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50) NOT NULL,
+    days INT NOT NULL
+);
+""")
+
     sql = """
     INSERT INTO DaysUntilCovid19 (UserID, DaysLeft)
     VALUES (%s, %s)
