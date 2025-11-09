@@ -107,4 +107,6 @@ async def add_rows(ctx):
     cursor.close()
     conn.close()
 
+    await ctx.send("Added all rows to the users")
+
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
