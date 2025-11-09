@@ -4,6 +4,7 @@ import logging # type: ignore
 from dotenv import load_dotenv
 import os # type: ignore
 import mysql.connector # type: ignore
+import sys.exit
 
 DB_HOST = os.environ.get("MYSQLHOST")
 DB_PORT = os.environ.get("MYSQLPORT")
@@ -11,19 +12,20 @@ DB_USER = os.environ.get("MYSQLUSER")
 DB_PASSWORD = os.environ.get("MYSQLPASSWORD")
 DB_NAME = os.environ.get("MYSQLDATABASE")
 
-# Establish the database connection
-try:
-    mydb = mysql.connector.connect(
-        host=DB_HOST,
-        port=DB_PORT,
-        user=DB_USER,
-        password=DB_PASSWORD,
-        database=DB_NAME
-    )
-
-    print("Connected to MySQL database!")
-except mysql.connector.Error as err:
-    print(f"Error connecting to MySQL: {err}")
+def open_connection():
+    try:
+        conn = mysql.connector.connect(
+            host=DB_HOST,
+            port=DB_PORT,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME
+        )
+    except mysql.connector.Error as err:
+        print(f"Error connecting to MySQL: {err}")
+        sys.exit(1)
+    finally:
+        conn.close()
 
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
@@ -86,4 +88,23 @@ async def infect(ctx, infected: discord.Member):
     else:
         await ctx.send(f"Cannot infect user {infected.mention} using brainrot because you don't have that role")
 
-bot.run(token, log_handler=handler, log_level=logging.DEBUG)
+@bot.command()
+async def add_rows(ctx):
+    open_connection()
+    cursor = conn.cursor()
+
+    sql = """
+    INSERT INTO DaysUntilCovid19 (UserID, DaysLeft)
+    VALUES (%s, %s)
+    """
+
+    for member in ctx.guild.members:
+        values = (member.id, 0)
+
+        cursor.execute(sql, values)
+        conn.commit()
+
+    cursor.close()
+    conn.close()
+
+bot.run(token)
