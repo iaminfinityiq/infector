@@ -98,7 +98,6 @@ async def add_rows(ctx):
     """
     global conn
     await ctx.send("debug")
-    await ctx.send(str(conn))
     open_connection()
     
     cursor = conn.cursor()
@@ -114,7 +113,7 @@ async def add_rows(ctx):
     VALUES (%s, %s)
     ON DUPLICATE KEY UPDATE days_left = days_left
     """  # This avoids duplicates
-
+    await ctx.send("another debug")
     try:
         for member in ctx.guild.members:
             await ctx.send(f"{member.mention}")
