@@ -100,8 +100,7 @@ async def add_rows(ctx):
     
     cursor = conn.cursor()
 
-    cursor.execute("""CREATE TABLE daysuntilcovid19 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    cursor.execute("""DROP TABLE daysuntilcovid19; CREATE TABLE DaysUntilCovid19 (
     user_id VARCHAR(50) NOT NULL,
     days INT NOT NULL
 );
