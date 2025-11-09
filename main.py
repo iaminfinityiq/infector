@@ -27,7 +27,7 @@ def open_connection():
     except mysql.connector.Error as err:
         print(f"Error connecting to MySQL: {err}")
         exit(1)
-        
+
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
@@ -66,6 +66,10 @@ async def on_message(message):
 
 @bot.command()
 async def infect(ctx, infected: discord.Member):
+    if infected.id == 1435931107521593344:
+        await ctx.send("Cannot infect the Infector himself")
+        return
+        
     admin = discord.utils.get(infected.roles, name="adm")
     if admin:
         await ctx.send(f"Cannot infect user {infected.mention} because {infected.mention} is an admin")
@@ -86,25 +90,34 @@ async def infect(ctx, infected: discord.Member):
         await ctx.send(f"Cannot infect user {infected.mention} using brainrot because you don't have that role")
 
 @bot.command()
+@bot.command()
 async def add_rows(ctx):
+    """
+    Adds all guild members to the DaysUntilCovid19 table with 0 days left.
+    Skips members who are already in the table.
+    """
     global conn
     open_connection()
+    
     cursor = conn.cursor()
 
     sql = """
     INSERT INTO DaysUntilCovid19 (UserID, DaysLeft)
     VALUES (%s, %s)
-    """
+    ON DUPLICATE KEY UPDATE DaysLeft = DaysLeft
+    """  # This avoids duplicates
 
-    for member in ctx.guild.members:
-        values = (member.id, 0)
+    try:
+        for member in ctx.guild.members:
+            if member.id != 1435931107521593344:
+                cursor.execute(sql, (member.id, 0))
 
-        cursor.execute(sql, values)
         conn.commit()
-
-    cursor.close()
-    conn.close()
-
-    await ctx.send("Added all rows to the users")
+        await ctx.send("Added all members to the database (duplicates skipped).")
+    except mysql.connector.Error as err:
+        await ctx.send(f"Database error: {err}")
+    finally:
+        cursor.close()
+        conn.close()
 
 bot.run(token)
