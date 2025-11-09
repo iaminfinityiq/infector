@@ -14,7 +14,7 @@ DB_USER = os.environ.get("MYSQLUSER")
 DB_PASSWORD = os.environ.get("MYSQLPASSWORD")
 DB_NAME = os.environ.get("MYSQLDATABASE")
 
-def open_connection():
+async def open_connection():
     global conn
     try:
         conn = mysql.connector.connect(
@@ -98,7 +98,7 @@ async def add_rows(ctx):
     """
     global conn
     await ctx.send("debug")
-    open_connection()
+    await open_connection()
     
     cursor = conn.cursor()
     
