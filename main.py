@@ -24,10 +24,6 @@ try:
     print("Connected to MySQL database!")
 except mysql.connector.Error as err:
     print(f"Error connecting to MySQL: {err}")
-finally:
-    if 'mydb' in locals() and mydb.is_connected():
-        mydb.close()
-        print("MySQL connection closed.")
 
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
