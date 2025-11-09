@@ -90,7 +90,6 @@ async def infect(ctx, infected: discord.Member):
         await ctx.send(f"Cannot infect user {infected.mention} using brainrot because you don't have that role")
 
 @bot.command()
-@bot.command()
 async def add_rows(ctx):
     """
     Adds all guild members to the DaysUntilCovid19 table with 0 days left.
@@ -121,3 +120,4 @@ async def add_rows(ctx):
         conn.close()
 
 bot.run(token)
+
