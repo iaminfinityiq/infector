@@ -19,7 +19,7 @@ def open_connection():
     try:
         conn = mysql.connector.connect(
             host=DB_HOST,
-            port=DB_PORT,
+            port=int(DB_PORT),
             user=DB_USER,
             password=DB_PASSWORD,
             database=DB_NAME
@@ -69,7 +69,7 @@ async def infect(ctx, infected: discord.Member):
     if infected.id == 1435931107521593344:
         await ctx.send("Cannot infect the Infector himself")
         return
-        
+
     admin = discord.utils.get(infected.roles, name="adm")
     if admin:
         await ctx.send(f"Cannot infect user {infected.mention} because {infected.mention} is an admin")
@@ -120,4 +120,3 @@ async def add_rows(ctx):
         conn.close()
 
 bot.run(token)
-
