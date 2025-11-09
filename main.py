@@ -91,11 +91,13 @@ async def infect(ctx, infected: discord.Member):
 
 @bot.command()
 async def add_rows(ctx):
+    await ctx.send("do you even run...")
     """
     Adds all guild members to the DaysUntilCovid19 table with 0 days left.
     Skips members who are already in the table.
     """
     global conn
+    await ctx.send(str(conn))
     open_connection()
     
     cursor = conn.cursor()
