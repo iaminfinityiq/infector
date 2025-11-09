@@ -114,6 +114,7 @@ async def add_rows(ctx):
 
     try:
         for member in ctx.guild.members:
+            await ctx.send(f"{member.mention}")
             if member.id != 1435931107521593344:
                 cursor.execute(sql, (str(member.id), 0))
 
