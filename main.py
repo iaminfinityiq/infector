@@ -115,7 +115,7 @@ async def add_rows(ctx):
     try:
         for member in ctx.guild.members:
             if member.id != 1435931107521593344:
-                cursor.execute(sql, (member.id, 0))
+                cursor.execute(sql, (str(member.id), 0))
 
         conn.commit()
         await ctx.send("Added all members to the database (duplicates skipped).")
