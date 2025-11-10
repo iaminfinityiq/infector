@@ -14,6 +14,7 @@ token = os.getenv("DISCORD_TOKEN")
 general = int(os.getenv("GENERAL"))
 server = int(os.getenv("SERVER_ID"))
 owner = int(os.getenv("OWNER_ID"))
+bot_id = int(os.getenv("BOT_ID"))
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -117,13 +118,8 @@ async def infect(ctx, infected: discord.Member):
         await ctx.send("You have already infect someone within 24 hours, please wait for a moment before you can infect someone")
         return
     
-    if infected.id == 1435931107521593344:
+    if infected.id == bot_id:
         await ctx.send("Cannot infect the Infector himself")
-        return
-
-    admin = discord.utils.get(infected.roles, name="adm")
-    if admin:
-        await ctx.send(f"Cannot infect user {infected.mention} because {infected.mention} is an admin")
         return
 
     covid19 = discord.utils.get(ctx.author.roles, name="covid 19")
@@ -142,6 +138,10 @@ async def infect(ctx, infected: discord.Member):
     
     brainrot = discord.utils.get(ctx.author.roles, name="brainrot")
     if brainrot:
+        brainrot = discord.utils.get(infected.roles, name="brainrot")
+        if brainrot:
+            await ctx.send(f"User {infected.mention} is already infected with brainrot")
+
         await infected.add_roles(brainrot)
         await ctx.send(f"Successfully infect user {infected.mention} using brainrot")
         data[str(infected.id)]["infected_time"] = int(time.time())
