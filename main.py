@@ -26,6 +26,8 @@ async def on_ready():
     """
     Bot is ready!
     """
+    if not bot_loop.is_running():
+        bot_loop.start()
 
 @bot.event
 async def on_member_join(member):
@@ -38,7 +40,7 @@ async def bot_loop():
     """
     Update loop for the bot, this runs every 60 seconds to avoid lagging
     """
-    with open("data.json") as file:
+    with open("data.json", "r") as file:
         data = json.load(file)
 
     guild = bot.get_guild(server_id)
@@ -82,8 +84,8 @@ async def bot_loop():
         await origin.add_roles(brainrot)
         await channel.send(f"Since there are no more person infected with brainrot, a new user getting infected with brainrot is {origin.mention}")
     
-    with open("data.json") as file:
-        data = json.load(file)
+    with open("data.json", "w") as file:
+        json.dump(data)
 
 @bot.event
 async def on_message(message):
@@ -157,3 +159,4 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
