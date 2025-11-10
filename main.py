@@ -115,7 +115,12 @@ async def infect(ctx, infected: discord.Member):
     with open("data.json", "w") as file:
         json.dump(data, file)
 
+async def print_data(ctx):
+    with open("data.json", "r") as file:
+        await ctx.send(str(json.load(file)))
+
 bot.run(token)
+
 
 
 
