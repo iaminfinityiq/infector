@@ -1,5 +1,5 @@
 import discord # type: ignore
-from discord.ext import commands # type: ignore
+from discord.ext import commands, tasks # type: ignore
 import logging # type: ignore
 from dotenv import load_dotenv
 import os # type: ignore
@@ -109,4 +109,5 @@ async def infect(ctx, infected: discord.Member):
         json.dump(data, file)
 
 bot.run(token)
+
 
