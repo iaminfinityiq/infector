@@ -36,26 +36,26 @@ async def on_member_join(member):
     When a member joins
     """
 
-@tasks.loop(seconds=60)
+@tasks.loop(seconds=1)
 async def bot_loop():
     """
-    Update loop for the bot, this runs every 60 seconds to avoid lagging
+    Update loop for the bot
     """
     with open("data.json", "r") as file:
         data = json.load(file)
 
-    guild = bot.get_guild(server_id)
+    guild = bot.get_guild(server)
     covid_infected = False
     brainrot_infected = False
     channel = bot.get_channel(general)
     for member in guild.members:
         covid19 = discord.utils.get(member.roles, name="covid 19")
-        if covid19 and int(time()) - data[member.id]["infected_time"] > 259200:
+        if covid19 and int(time()) - data[str(member.id)]["infected_time"] > 259200:
             covid_infected = True
             timeout_duration = timedelta(minutes=30)
 
             try:
-                await user.timeout(timeout_duration, reason="Infected with covid 19 for more than 3 days")
+                await member.timeout(timeout_duration, reason="Infected with covid 19 for more than 3 days")
             except Exception:
                 await channel.send(f"User {member.mention} cannot be timed out")
             else:
@@ -77,7 +77,7 @@ async def bot_loop():
         await origin.add_roles(covid19)
         await channel.send(f"Since there are no more person infected with covid 19, a new user getting infected with covid 19 is {origin.mention}")
         
-        data[str(member.id)]["infected_time"] = int(time())
+        data[str(origin.id)]["infected_time"] = int(time())
 
     if not brainrot_infected:
         idx = randint(0, len(guild.members)-1)
@@ -86,7 +86,7 @@ async def bot_loop():
         await channel.send(f"Since there are no more person infected with brainrot, a new user getting infected with brainrot is {origin.mention}")
     
     with open("data.json", "w") as file:
-        json.dump(data)
+        json.dump(data, file)
 
 @bot.event
 async def on_message(message):
@@ -124,28 +124,29 @@ async def infect(ctx, infected: discord.Member):
 
     covid19 = discord.utils.get(ctx.author.roles, name="covid 19")
     if covid19:
-        covid19 = discord.utils.get(infected.roles, name="covid 19")
-        if covid19:
-            await ctx.send(f"User {infected.mention} is already infected with covid 19")
+        covid19_author = discord.utils.get(ctx.author.roles, name="covid 19")
+        if covid19_author:
+            covid19_target = discord.utils.get(infected.roles, name="covid 19")
+
         
         await infected.add_roles(covid19)
         await ctx.send(f"Successfully infect user {infected.mention} using covid 19")
             
-        data[str(infected.id)]["infected_time"] = int(time.time())
-        data[str(ctx.author.id)]["infect_time"] = int(time.time())
+        data[str(infected.id)]["infected_time"] = int(time())
+        data[str(ctx.author.id)]["infect_time"] = int(time())
     else:
         await ctx.send(f"Cannot infect user {infected.mention} using covid 19 because you don't have that role")
     
     brainrot = discord.utils.get(ctx.author.roles, name="brainrot")
     if brainrot:
-        brainrot = discord.utils.get(infected.roles, name="brainrot")
-        if brainrot:
+        brainrot_author = discord.utils.get(infected.roles, name="brainrot")
+        if brainrot_author:
             await ctx.send(f"User {infected.mention} is already infected with brainrot")
 
         await infected.add_roles(brainrot)
         await ctx.send(f"Successfully infect user {infected.mention} using brainrot")
-        data[str(infected.id)]["infected_time"] = int(time.time())
-        data[str(ctx.author.id)]["infect_time"] = int(time.time())
+        data[str(infected.id)]["infected_time"] = int(time())
+        data[str(ctx.author.id)]["infect_time"] = int(time())
     else:
         await ctx.send(f"Cannot infect user {infected.mention} using brainrot because you don't have that role")
 
