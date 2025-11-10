@@ -50,8 +50,10 @@ async def bot_loop():
     channel = bot.get_channel(general)
     for member in guild.members:
         covid19 = discord.utils.get(member.roles, name="covid 19")
-        if covid19 and int(time()) - data[str(member.id)]["infected_time"] > 259200:
+        if covid19:
             covid_infected = True
+        
+        if covid19 and int(time()) - data[str(member.id)]["infected_time"] > 259200:
             timeout_duration = timedelta(minutes=30)
 
             try:
@@ -84,9 +86,6 @@ async def bot_loop():
 
     if not brainrot_infected:
         idx = randint(0, len(guild.members)-1)
-        while guild.members[idx].id == bot_id:
-            idx = randint(0, len(guild.members)-1)
-            
         origin = guild.members[idx]
         await origin.add_roles(brainrot)
         await channel.send(f"Since there are no more person infected with brainrot, a new user getting infected with brainrot is {origin.mention}")
@@ -171,5 +170,4 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
-
 
