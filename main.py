@@ -50,7 +50,7 @@ async def bot_loop():
     channel = bot.get_channel(general)
     for member in guild.members:
         covid19 = discord.utils.get(member.roles, name="covid 19")
-        if covid19_role:
+        if covid19:
             covid_infected = True
             if int(time()) - data[str(member.id)]["infected_time"] > 259200:
                 timeout_duration = timedelta(minutes=30)
@@ -60,7 +60,7 @@ async def bot_loop():
                     await channel.send(f"User {member.mention} cannot be timed out")
                 else:
                     await channel.send(f"User {member.mention} has been infected with covid 19 for more than 3 days. Because of that, {member.mention} will be timed out for 30 minutes.")
-                # Reset infection after timeout
+
                 data[str(member.id)]["infected_time"] = 0
                 data[str(member.id)]["infect_time"] = 0
                 await member.remove_roles(covid19_role)
