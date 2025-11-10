@@ -11,6 +11,7 @@ from datetime import timedelta # type: ignore
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
 general = int(os.getenv("GENERAL"))
+server = int(os.getenv("SERVER_ID"))
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -34,8 +35,9 @@ async def on_member_join(member):
 async def status_update():
     with open("data.json") as file:
         data = json.load(file)
-        
-    for member in ctx.guilds.members:
+
+    guild = bot.get_guild(server_id)
+    for member in guild.members:
         covid19 = discord.utils.get(member.roles, name="covid 19")
         if covid19 and int(time()) - data[member.id]["infected_time"] > 259200:
             timeout_duration = timedelta(minutes=30)
@@ -107,3 +109,4 @@ async def infect(ctx, infected: discord.Member):
         json.dump(data, file)
 
 bot.run(token)
+
