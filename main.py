@@ -46,6 +46,13 @@ async def status_update():
             channel = bot.get_channel(general)
             await channel.send(f"User {member.mention} has been infected with covid 19 for more than 3 days. Because of that, {member.mention} will be timed out for 30 minutes!")
 
+            data[str(member.id)]["infected_time"] = 0
+            data[str(member.id)]["infect_time"] = 0
+            member.remove_roles(covid19)
+
+    with open("data.json") as file:
+        data = json.load(file)
+
 @bot.event
 async def on_message(message):
     """
@@ -69,7 +76,7 @@ async def infect(ctx, infected: discord.Member):
     with open("data.json") as file:
         data = json.load(file)
 
-    if int(time()) - data[infected]["infect_time"] < 86400:
+    if int(time()) - data[str(infected.id)]["infect_time"] < 86400:
         await ctx.send("You have already infect someone within 24 hours, please wait for a moment before you can infect someone")
         return
     
@@ -91,8 +98,8 @@ async def infect(ctx, infected: discord.Member):
         await infected.add_roles(covid19)
         await ctx.send(f"Successfully infect user {infected.mention} using covid 19")
             
-        data[infected.id]["infected_time"] = int(time.time())
-        data[ctx.author.id]["infect_time"] = int(time.time())
+        data[str(infected.id)]["infected_time"] = int(time.time())
+        data[str(ctx.author.id)]["infect_time"] = int(time.time())
     else:
         await ctx.send(f"Cannot infect user {infected.mention} using covid 19 because you don't have that role")
     
@@ -100,8 +107,8 @@ async def infect(ctx, infected: discord.Member):
     if brainrot:
         await infected.add_roles(brainrot)
         await ctx.send(f"Successfully infect user {infected.mention} using brainrot")
-        data[infected.id]["infected_time"] = int(time.time())
-        data[ctx.author.id]["infect_time"] = int(time.time())
+        data[str(infected.id)]["infected_time"] = int(time.time())
+        data[str(ctx.author.id)]["infect_time"] = int(time.time())
     else:
         await ctx.send(f"Cannot infect user {infected.mention} using brainrot because you don't have that role")
 
@@ -109,5 +116,6 @@ async def infect(ctx, infected: discord.Member):
         json.dump(data, file)
 
 bot.run(token)
+
 
 
