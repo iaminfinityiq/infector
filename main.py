@@ -73,6 +73,9 @@ async def bot_loop():
     brainrot = discord.utils.get(guild.roles, name="brainrot")
     if not covid_infected:
         idx = randint(0, len(guild.members)-1)
+        while guild.members[idx].id == bot_id:
+            idx = randint(0, len(guild.members)-1)
+        
         origin = guild.members[idx]
         await origin.add_roles(covid19)
         await channel.send(f"Since there are no more person infected with covid 19, a new user getting infected with covid 19 is {origin.mention}")
