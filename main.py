@@ -84,6 +84,9 @@ async def bot_loop():
 
     if not brainrot_infected:
         idx = randint(0, len(guild.members)-1)
+        while guild.members[idx].id == bot_id:
+            idx = randint(0, len(guild.members)-1)
+            
         origin = guild.members[idx]
         await origin.add_roles(brainrot)
         await channel.send(f"Since there are no more person infected with brainrot, a new user getting infected with brainrot is {origin.mention}")
@@ -168,4 +171,5 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
