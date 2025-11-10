@@ -36,7 +36,7 @@ async def on_member_join(member):
     When a member joins
     """
 
-@tasks.loop(seconds=1)
+@tasks.loop(seconds=10)
 async def bot_loop():
     """
     Update loop for the bot
@@ -87,6 +87,11 @@ async def bot_loop():
     
     with open("data.json", "w") as file:
         json.dump(data, file)
+
+@bot_loop.error
+async def bot_loop_error(error):
+    channel = bot.get_channel(general)
+    await channel.send(f"❌ Bot loop error: {error}")
 
 @bot.event
 async def on_message(message):
