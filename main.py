@@ -41,6 +41,9 @@ async def on_ready():
 
         if brainrot:
             await member.remove_roles(brainrot)
+
+    with open("data.json", "w") as file:
+        json.dump(data, file)
     
     if not bot_loop.is_running():
         bot_loop.start()
@@ -189,6 +192,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
