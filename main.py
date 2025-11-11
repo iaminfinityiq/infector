@@ -37,9 +37,11 @@ async def on_ready():
         data[str(member.id)]["infect_time"] = int(time())
         data[str(member.id)]["infected_time"] = int(time())
         if covid19:
-            await member.remove_roles(covid19)
+            new_covid19 = discord.utils.get(member.roles, name="covid 19")
+            await member.remove_roles(new_covid19)
 
         if brainrot:
+            new_brainrot = discors.utils.get(member.roles, name="brainrot")
             await member.remove_roles(brainrot)
 
     with open("data.json", "w") as file:
@@ -193,6 +195,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
