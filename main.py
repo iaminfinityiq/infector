@@ -74,6 +74,13 @@ async def bot_loop():
         data = json.load(file)
 
     guild = bot.get_guild(server)
+    if guild is None:
+        await channel.send("❌ Guild is None!")
+        return
+    if not guild.members:
+        await channel.send("❌ Guild members list is empty!")
+        return
+    await channel.send(f"✅ Found {len(guild.members)} members")
     covid_infected = False
     brainrot_infected = False
     channel = bot.get_channel(general)
@@ -195,6 +202,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
