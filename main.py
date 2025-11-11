@@ -1,5 +1,3 @@
-FUCKING DIE
-
 import discord # type: ignore
 from discord.ext import commands, tasks # type: ignore
 import logging # type: ignore
@@ -29,6 +27,21 @@ async def on_ready():
     """
     Bot is ready!
     """
+    with open("data.json", "r") as file:
+        data = json.load(file)
+    
+    guild = bot.get_guild(server)
+    covid19 = discord.utils.get(guild.roles, name="covid 19")
+    brainrot = discord.utils.get(guild.roles, name="brainrot")
+    for member in guild.members:
+        data[str(member.id)]["infect_time"] = int(time())
+        data[str(member.id)]["infected_time"] = int(time())
+        if covid19:
+            member.remove_roles(covid19)
+
+        if brainrot:
+            member.remove_roles(brainrot)
+    
     if not bot_loop.is_running():
         bot_loop.start()
 
@@ -43,6 +56,9 @@ async def on_member_join(member):
     if str(member.id) not in data:
         data[str(member.id)]["infect_time"] = int(time())
         data[str(member.id)]["infected_time"] = int(time())
+
+    with open("data.json", "w") as file:
+        json.dump(data, file)
 
 @tasks.loop(seconds=10)
 async def bot_loop():
@@ -173,6 +189,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
