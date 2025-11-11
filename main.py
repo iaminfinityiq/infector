@@ -129,8 +129,8 @@ async def infect(ctx, infected: discord.Member):
 
     covid19 = discord.utils.get(ctx.author.roles, name="covid 19")
     if covid19:
-        covid19_author = discord.utils.get(ctx.author.roles, name="covid 19")
-        if covid19_author:
+        covid19_infected = discord.utils.get(infected.roles, name="covid 19")
+        if covid19_infected:
             await ctx.send(f"User {infected.mention} is already infected with covid 19")
         else:
             await infected.add_roles(covid19)
@@ -144,8 +144,8 @@ async def infect(ctx, infected: discord.Member):
     
     brainrot = discord.utils.get(ctx.author.roles, name="brainrot")
     if brainrot:
-        brainrot_author = discord.utils.get(infected.roles, name="brainrot")
-        if brainrot_author:
+        brainrot_infected = discord.utils.get(infected.roles, name="brainrot")
+        if brainrot_infected:
             await ctx.send(f"User {infected.mention} is already infected with brainrot")
         else:
             await infected.add_roles(brainrot)
@@ -165,6 +165,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
