@@ -63,8 +63,6 @@ async def on_member_join(member):
     with open("data.json", "w") as file:
         json.dump(data, file)
 
-    bot_loop.start()
-
 @tasks.loop(seconds=10)
 async def bot_loop():
     """
@@ -194,6 +192,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
