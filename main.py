@@ -37,6 +37,12 @@ async def on_member_join(member):
     """
     When a member joins
     """
+    with open("data.json", "r") as file:
+        data = json.load(file)
+
+    if str(member.id) not in data:
+        data[str(member.id)]["infect_time"] = int(time())
+        data[str(member.id)]["infected_time"] = int(time())
 
 @tasks.loop(seconds=10)
 async def bot_loop():
@@ -64,8 +70,8 @@ async def bot_loop():
                     await channel.send(f"User {member.mention} has been infected with covid 19 for more than 3 days. Because of that, {member.mention} will be timed out for 30 minutes.")
 
                 await member.remove_roles(covid19)
-                data[str(member.id)]["infected_time"] = 0
-                data[str(member.id)]["infect_time"] = 0
+                data[str(member.id)]["infected_time"] = int(time())
+                data[str(member.id)]["infect_time"] = int(time())
 
         brainrot = discord.utils.get(member.roles, name="brainrot")
         if brainrot:
@@ -167,6 +173,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
