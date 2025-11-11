@@ -96,6 +96,7 @@ async def bot_loop():
         if brainrot:
             brainrot_infected = True
 
+    await channel.send(f"{covid19_infected} {brainrot_infected}")
     covid19 = discord.utils.get(guild.roles, name="covid 19")
     brainrot = discord.utils.get(guild.roles, name="brainrot")
     if not covid_infected:
@@ -192,6 +193,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
