@@ -1,4 +1,3 @@
-die
 import discord # type: ignore
 from discord.ext import commands, tasks # type: ignore
 import logging # type: ignore
@@ -73,19 +72,16 @@ async def bot_loop():
     covid19 = discord.utils.get(guild.roles, name="covid 19")
     brainrot = discord.utils.get(guild.roles, name="brainrot")
     if not covid_infected:
-        idx = randint(0, len(guild.members)-1)
-        while guild.members[idx].id == bot_id:
-            idx = randint(0, len(guild.members)-1)
-        
-        origin = guild.members[idx]
+        members = [m for m in guild.members if not m.bot]
+        origin = members[randint(0, len(members)-1)]
         await origin.add_roles(covid19)
         await channel.send(f"Since there are no more person infected with covid 19, a new user getting infected with covid 19 is {origin.mention}")
         
         data[str(origin.id)]["infected_time"] = int(time())
 
     if not brainrot_infected:
-        idx = randint(0, len(guild.members)-1)
-        origin = guild.members[idx]
+        members = [m for m in guild.members if not m.bot]
+        origin = members[randint(0, len(members)-1)]
         await origin.add_roles(brainrot)
         await channel.send(f"Since there are no more person infected with brainrot, a new user getting infected with brainrot is {origin.mention}")
     
@@ -124,7 +120,7 @@ async def infect(ctx, infected: discord.Member):
         data = json.load(file)
 
     if int(time()) - data[str(ctx.author.id)]["infect_time"] < 86400:
-        await ctx.send("You have already infect someone within 24 hours, please wait for a moment before you can infect someone")
+        await ctx.send("You have already infect someone within 24 hours, or you are infected within your first hour, please wait for a moment before you can infect someone")
         return
     
     if infected.id == bot_id:
@@ -135,14 +131,14 @@ async def infect(ctx, infected: discord.Member):
     if covid19:
         covid19_author = discord.utils.get(ctx.author.roles, name="covid 19")
         if covid19_author:
-            covid19_target = discord.utils.get(infected.roles, name="covid 19")
-
-        
-        await infected.add_roles(covid19)
-        await ctx.send(f"Successfully infect user {infected.mention} using covid 19")
+            await ctx.send(f"User {infected.mention} is already infected with covid 19")
+        else:
+            await infected.add_roles(covid19)
+            await ctx.send(f"Successfully infect user {infected.mention} using covid 19")
             
-        data[str(infected.id)]["infected_time"] = int(time())
-        data[str(ctx.author.id)]["infect_time"] = int(time())
+            data[str(infected.id)]["infected_time"] = int(time())
+            data[str(ctx.author.id)]["infect_time"] = int(time())
+            data[str(infected.id)]["infect_time"] = int(time()) - 82800 # Added a 1-hour cooldown after being infected to avoid mass infection
     else:
         await ctx.send(f"Cannot infect user {infected.mention} using covid 19 because you don't have that role")
     
@@ -151,11 +147,11 @@ async def infect(ctx, infected: discord.Member):
         brainrot_author = discord.utils.get(infected.roles, name="brainrot")
         if brainrot_author:
             await ctx.send(f"User {infected.mention} is already infected with brainrot")
-
-        await infected.add_roles(brainrot)
-        await ctx.send(f"Successfully infect user {infected.mention} using brainrot")
-        data[str(infected.id)]["infected_time"] = int(time())
-        data[str(ctx.author.id)]["infect_time"] = int(time())
+        else:
+            await infected.add_roles(brainrot)
+            await ctx.send(f"Successfully infect user {infected.mention} using brainrot")
+            data[str(ctx.author.id)]["infect_time"] = int(time())
+            data[str(infected.id)]["infect_time"] = int(time()) - 43200
     else:
         await ctx.send(f"Cannot infect user {infected.mention} using brainrot because you don't have that role")
 
@@ -169,6 +165,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
