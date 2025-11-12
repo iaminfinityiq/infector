@@ -1,3 +1,5 @@
+bot cust
+
 import discord # type: ignore
 from discord.ext import commands, tasks # type: ignore
 import logging # type: ignore
@@ -222,6 +224,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
