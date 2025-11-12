@@ -15,6 +15,18 @@ general = int(os.getenv("GENERAL"))
 server = int(os.getenv("SERVER_ID"))
 owner = int(os.getenv("OWNER_ID"))
 bot_id = int(os.getenv("BOT_ID"))
+cure_channels = [
+    int(os.getenv("CURE_SPOT_1")),
+    int(os.getenv("CURE_SPOT_2")),
+    int(os.getenv("CURE_SPOT_3")),
+    int(os.getenv("CURE_SPOT_4")),
+    int(os.getenv("CURE_SPOT_5")),
+    int(os.getenv("CURE_SPOT_6")),
+    int(os.getenv("CURE_SPOT_7")),
+    int(os.getenv("CURE_SPOT_8")),
+    int(os.getenv("CURE_SPOT_9")),
+    int(os.getenv("CURE_SPOT_10"))
+]
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -32,6 +44,9 @@ async def on_ready():
     with open("data.json", "r") as file:
         data = json.load(file)
 
+    if "cure" not in data:
+        data["cure"] = cure_channels[randint(0, 9)]
+    
     # for member in guild.members:
     #     # Ensure the member exists in JSON
     #     if str(member.id) not in data:
@@ -72,7 +87,7 @@ async def on_member_join(member):
     with open("data.json", "w") as file:
         json.dump(data, file)
 
-@tasks.loop(seconds=10)
+@tasks.loop(seconds=1)
 async def bot_loop():
     """
     Update loop for the bot
@@ -81,6 +96,7 @@ async def bot_loop():
     with open("data.json", "r") as file:
         data = json.load(file)
 
+    cure_pos = randint(0, 9)
     guild = bot.get_guild(server)
     covid_infected = False
     brainrot_infected = False
@@ -203,6 +219,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
