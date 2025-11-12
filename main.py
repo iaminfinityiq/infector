@@ -1,5 +1,3 @@
-bot cust
-
 import discord # type: ignore
 from discord.ext import commands, tasks # type: ignore
 import logging # type: ignore
@@ -49,23 +47,10 @@ async def on_ready():
     if "cure" not in data:
         data["cure"] = cure_channels[randint(0, 9)]
     
-    # for member in guild.members:
-    #     # Ensure the member exists in JSON
-    #     if str(member.id) not in data:
-    #         data[str(member.id)] = {"infect_time": int(time()), "infected_time": int(time())}
-    #     else:
-    #         data[str(member.id)]["infect_time"] = int(time())
-    #         data[str(member.id)]["infected_time"] = int(time())
-
-    #     # Safely remove roles
-    #     try:
-    #         if covid19:
-    #             await member.remove_roles(covid19)
-    #         if brainrot:
-    #             await member.remove_roles(brainrot)
-    #     except Exception as e:
-    #         if channel:
-    #             await channel.send(f"⚠️ Failed to remove roles from {member.mention}: {e}")
+    for member in guild.members:
+        # Ensure the member exists in JSON
+        if str(member.id) not in data:
+            data[str(member.id)] = {"infect_time": int(time()), "infected_time": int(time())}
 
     with open("data.json", "w") as file:
         json.dump(data, file)
@@ -97,8 +82,7 @@ async def bot_loop():
     channel = bot.get_channel(general)
     with open("data.json", "r") as file:
         data = json.load(file)
-
-    cure_pos = randint(0, 9)
+        
     guild = bot.get_guild(server)
     covid_infected = False
     brainrot_infected = False
@@ -224,6 +208,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
