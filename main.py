@@ -155,6 +155,11 @@ async def infect(ctx, infected: discord.Member):
     with open("data.json") as file:
         data = json.load(file)
 
+    covid19 = discord.utils.get(ctx.author.roles, name="covid 19")
+    brainrot = discord.utils.get(ctx.author.roles, name="brainrot")
+    if not covid19 and not brainrot:
+        await ctx.send(f"You can't infect {infected.mention} because you don't have any infection role")
+    
     if int(time()) - data[str(ctx.author.id)]["infect_time"] < 86400:
         await ctx.send("You have already infect someone within 24 hours, or you are infected within your first hour, please wait for a moment before you can infect someone")
         return
@@ -175,8 +180,6 @@ async def infect(ctx, infected: discord.Member):
             data[str(infected.id)]["infected_time"] = int(time())
             data[str(ctx.author.id)]["infect_time"] = int(time())
             data[str(infected.id)]["infect_time"] = int(time()) - 82800 # Added a 1-hour cooldown after being infected to avoid mass infection
-    else:
-        await ctx.send(f"Cannot infect user {infected.mention} using covid 19 because you don't have that role")
     
     brainrot = discord.utils.get(ctx.author.roles, name="brainrot")
     if brainrot:
@@ -188,8 +191,6 @@ async def infect(ctx, infected: discord.Member):
             await ctx.send(f"Successfully infect user {infected.mention} using brainrot")
             data[str(ctx.author.id)]["infect_time"] = int(time())
             data[str(infected.id)]["infect_time"] = int(time()) - 43200
-    else:
-        await ctx.send(f"Cannot infect user {infected.mention} using brainrot because you don't have that role")
 
     with open("data.json", "w") as file:
         json.dump(data, file)
@@ -201,6 +202,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
