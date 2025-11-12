@@ -158,7 +158,7 @@ async def infect(ctx, infected: discord.Member):
     covid19 = discord.utils.get(ctx.author.roles, name="covid 19")
     brainrot = discord.utils.get(ctx.author.roles, name="brainrot")
     if not covid19 and not brainrot:
-        await ctx.send(f"You can't infect {infected.mention} because you don't have any infection role")\
+        await ctx.send(f"You can't infect {infected.mention} because you don't have any infection role")
         return
     
     if int(time()) - data[str(ctx.author.id)]["infect_time"] < 86400:
@@ -203,6 +203,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
