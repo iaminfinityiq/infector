@@ -128,7 +128,8 @@ async def bot_loop():
         origin = members[randint(0, len(members)-1)]
         await origin.add_roles(covid19)
         await channel.send(f"Since there are no more person infected with covid 19, a new user getting infected with covid 19 is {origin.mention}")
-        
+
+        data[str(origin.id)]["infect_time"] = int(time()) - 82800
         data[str(origin.id)]["infected_time"] = int(time())
 
     if not brainrot_infected:
@@ -136,6 +137,8 @@ async def bot_loop():
         origin = members[randint(0, len(members)-1)]
         await origin.add_roles(brainrot)
         await channel.send(f"Since there are no more person infected with brainrot, a new user getting infected with brainrot is {origin.mention}")
+        data[str(origin.id)]["infect_time"] = int(time()) - 82800
+        data[str(origin.id)]["infected_time"] = int(time())
     
     with open("data.json", "w") as file:
         json.dump(data, file)
@@ -207,7 +210,7 @@ async def infect(ctx, infected: discord.Member):
             await infected.add_roles(brainrot)
             await ctx.send(f"Successfully infect user {infected.mention} using brainrot")
             data[str(ctx.author.id)]["infect_time"] = int(time())
-            data[str(infected.id)]["infect_time"] = int(time()) - 43200
+            data[str(infected.id)]["infect_time"] = int(time()) - 82800
 
     with open("data.json", "w") as file:
         json.dump(data, file)
@@ -219,6 +222,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
