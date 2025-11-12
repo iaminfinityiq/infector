@@ -26,12 +26,6 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 async def on_ready():
     guild = bot.get_guild(server)
     channel = bot.get_channel(general)
-
-    if guild is None:
-        if channel:
-            await channel.send(f"⚠️ Cannot find guild with ID {server}")
-        return
-
     covid19 = discord.utils.get(guild.roles, name="covid 19")
     brainrot = discord.utils.get(guild.roles, name="brainrot")
     
@@ -62,8 +56,6 @@ async def on_ready():
     # Start the loop safely
     if not bot_loop.is_running():
         bot_loop.start()
-        if channel:
-            await channel.send("✅ Bot loop started and roles reset successfully")
 
 @bot.event
 async def on_member_join(member):
@@ -90,13 +82,6 @@ async def bot_loop():
         data = json.load(file)
 
     guild = bot.get_guild(server)
-    if guild is None:
-        await channel.send("❌ Guild is None!")
-        return
-    if not guild.members:
-        await channel.send("❌ Guild members list is empty!")
-        return
-    await channel.send(f"✅ Found {len(guild.members)} members")
     covid_infected = False
     brainrot_infected = False
     for member in guild.members:
@@ -120,7 +105,6 @@ async def bot_loop():
         if brainrot:
             brainrot_infected = True
 
-    await channel.send(f"{covid_infected} {brainrot_infected}")
     covid19 = discord.utils.get(guild.roles, name="covid 19")
     brainrot = discord.utils.get(guild.roles, name="brainrot")
     if not covid_infected:
@@ -217,6 +201,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
