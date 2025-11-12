@@ -85,6 +85,7 @@ async def bot_loop():
     """
     Update loop for the bot
     """
+    channel = bot.get_channel(general)
     with open("data.json", "r") as file:
         data = json.load(file)
 
@@ -98,7 +99,6 @@ async def bot_loop():
     await channel.send(f"✅ Found {len(guild.members)} members")
     covid_infected = False
     brainrot_infected = False
-    channel = bot.get_channel(general)
     for member in guild.members:
         covid19 = discord.utils.get(member.roles, name="covid 19")
         if covid19:
@@ -217,6 +217,7 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
 
 
