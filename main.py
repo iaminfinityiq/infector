@@ -207,36 +207,4 @@ async def print_data(ctx):
         with open("data.json", "r") as file:
             await ctx.send(str(json.load(file)))
 
-bot.run(token)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#bot.run(token)
