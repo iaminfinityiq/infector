@@ -99,9 +99,9 @@ async def bot_loop():
                 else:
                     await channel.send(f"User {member.mention} has been infected with covid 19 for more than 3 days. Because of that, {member.mention} will be timed out for 30 minutes.")
 
-                await member.remove_roles(covid19)
                 data[str(member.id)]["infected_time"] = int(time())
                 data[str(member.id)]["infect_time"] = int(time())
+                await member.remove_roles(covid19)
 
         brainrot = discord.utils.get(member.roles, name="brainrot")
         if brainrot:
@@ -112,19 +112,18 @@ async def bot_loop():
     if not covid_infected:
         members = [m for m in guild.members if not m.bot]
         origin = members[randint(0, len(members)-1)]
-        await origin.add_roles(covid19)
-        await channel.send(f"Since there are no more person infected with covid 19, a new user getting infected with covid 19 is {origin.mention}")
-
         data[str(origin.id)]["infect_time"] = int(time()) - 82800
         data[str(origin.id)]["infected_time"] = int(time())
+        await origin.add_roles(covid19)
+        await channel.send(f"Since there are no more person infected with covid 19, a new user getting infected with covid 19 is {origin.mention}")
 
     if not brainrot_infected:
         members = [m for m in guild.members if not m.bot]
         origin = members[randint(0, len(members)-1)]
-        await origin.add_roles(brainrot)
-        await channel.send(f"Since there are no more person infected with brainrot, a new user getting infected with brainrot is {origin.mention}")
         data[str(origin.id)]["infect_time"] = int(time()) - 82800
         data[str(origin.id)]["infected_time"] = int(time())
+        await origin.add_roles(brainrot)
+        await channel.send(f"Since there are no more person infected with brainrot, a new user getting infected with brainrot is {origin.mention}")
     
     with open("data.json", "w") as file:
         json.dump(data, file)
@@ -180,12 +179,11 @@ async def infect(ctx, infected: discord.Member):
         if covid19_infected:
             await ctx.send(f"User {infected.mention} is already infected with covid 19")
         else:
-            await infected.add_roles(covid19)
-            await ctx.send(f"Successfully infect user {infected.mention} using covid 19")
-            
             data[str(infected.id)]["infected_time"] = int(time())
             data[str(ctx.author.id)]["infect_time"] = int(time())
             data[str(infected.id)]["infect_time"] = int(time()) - 82800 # Added a 1-hour cooldown after being infected to avoid mass infection
+            await infected.add_roles(covid19)
+            await ctx.send(f"Successfully infect user {infected.mention} using covid 19")
     
     brainrot = discord.utils.get(ctx.author.roles, name="brainrot")
     if brainrot:
@@ -193,10 +191,11 @@ async def infect(ctx, infected: discord.Member):
         if brainrot_infected:
             await ctx.send(f"User {infected.mention} is already infected with brainrot")
         else:
-            await infected.add_roles(brainrot)
-            await ctx.send(f"Successfully infect user {infected.mention} using brainrot")
             data[str(ctx.author.id)]["infect_time"] = int(time())
             data[str(infected.id)]["infect_time"] = int(time()) - 82800
+            data[str(infected.id)]["infect_time"] = int(time()) - 82800 # Added a 1-hour cooldown after being infected to avoid mass infection
+            await infected.add_roles(brainrot)
+            await ctx.send(f"Successfully infect user {infected.mention} using brainrot")
 
     with open("data.json", "w") as file:
         json.dump(data, file)
@@ -207,4 +206,5 @@ async def print_data(ctx):
         with open("data.json", "r") as file:
             await ctx.send(str(json.load(file)))
 
-#bot.run(token)
+bot.run(token)
+
