@@ -91,7 +91,7 @@ async def bot_loop():
         if covid19:
             covid_infected = True
             if int(time()) - data[str(member.id)]["infected_time"] > 259200:
-                timeout_duration = timedelta(minutes=30)
+                timeout_duration = timedelta(minutes=5)
                 try:
                     await member.timeout(timeout_duration, reason="Infected with covid 19 for more than 3 days")
                 except Exception:
@@ -101,7 +101,7 @@ async def bot_loop():
 
                 data[str(member.id)]["infected_time"] = int(time())
                 data[str(member.id)]["infect_time"] = int(time())
-                await member.remove_roles(covid19)
+                #await member.remove_roles(covid19)
 
         brainrot = discord.utils.get(member.roles, name="brainrot")
         if brainrot:
@@ -165,13 +165,13 @@ async def infect(ctx, infected: discord.Member):
         await ctx.send(f"You can't infect {infected.mention} because you don't have any infection role")
         return
     
-    if int(time()) - data[str(ctx.author.id)]["infect_time"] < 86400:
+    if int(time()) - data[str(ctx.author.id)]["infect_time"] < 0:
         await ctx.send("You have already infect someone within 24 hours, or you are infected within your first hour, please wait for a moment before you can infect someone")
         return
     
-    if infected.id == bot_id:
-        await ctx.send("Cannot infect the Infector himself")
-        return
+    #if infected.id == bot_id:
+    #    await ctx.send("Cannot infect the Infector himself")
+    #    return
 
     covid19 = discord.utils.get(ctx.author.roles, name="covid 19")
     if covid19:
@@ -202,9 +202,9 @@ async def infect(ctx, infected: discord.Member):
 
 @bot.command()
 async def print_data(ctx):
-    if ctx.author.id == owner:
-        with open("data.json", "r") as file:
-            await ctx.send(str(json.load(file)))
+    with open("data.json", "r") as file:
+        await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
