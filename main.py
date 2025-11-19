@@ -52,6 +52,14 @@ async def on_ready():
         if str(member.id) not in data:
             data[str(member.id)] = {"infect_time": int(time()), "infected_time": int(time())}
 
+        covid19 = discord.utils.get(member.roles, name="covid 19")
+        brainrot = discord.utils.get(member.roles, name="brainrot")
+        if covid19:
+            await member.remove_roles(covid19)
+
+        if brainrot:
+            await member.remove_roles(brainrot)
+
     with open("data.json", "w") as file:
         json.dump(data, file)
 
@@ -207,4 +215,5 @@ async def print_data(ctx):
             await ctx.send(str(json.load(file)))
 
 bot.run(token)
+
 
